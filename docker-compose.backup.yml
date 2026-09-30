@@ -67,5 +67,6 @@ services:
           fi
 
           # Sleep for 24 hours (86400 seconds)
-          sleep 86400
+          sleep 86400 &
+          wait $$!
         done
