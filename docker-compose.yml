@@ -1,3 +1,6 @@
+include:
+  - docker-compose.backup.yml
+
 services:
   frigate:
     container_name: frigate
