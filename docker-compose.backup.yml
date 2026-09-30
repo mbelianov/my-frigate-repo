@@ -17,7 +17,9 @@ services:
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-        mkdir -p /tmp/.ssh && chmod 700 /tmp/.ssh
+        mkdir -p /tmp/.ssh
+        # Add passwd entry so SSH can resolve uid 1000
+        echo "user:x:1000:1000::/tmp:/bin/sh" >> /etc/passwd
         apk add --no-cache sqlite age >/dev/null 2>&1
         git config --global --add safe.directory /repo
         git config --global user.name "Frigate Backup Bot"
