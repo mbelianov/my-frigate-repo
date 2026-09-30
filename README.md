@@ -20,7 +20,7 @@ A lightweight, developer-friendly, GitOps-aligned backup solution for Frigate NV
                       |           |                       |          |
                       |           v                       v          |
                       |     +-----------+           +-----------+    |
-                      |     |ffigate.db |           | users.sql |    |
+                      |     |frigate.db |           | users.sql |    |
                       |     |   (WAL)   |           +-----+-----+    |
                       |     +-----------+                 |          |
                       |                                   v          |
