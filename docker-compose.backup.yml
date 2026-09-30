@@ -2,24 +2,19 @@ services:
   git-backup:
     image: alpine/git:latest
     container_name: frigate_git_backup
-    user: "1000:1000"
     restart: unless-stopped
     volumes:
       # Mount project repository
       - ./:/repo
       # Mount host SSH keys (read-only) for git push
-      - ~/.ssh/id_ed25519:/tmp/.ssh/id_ed25519:ro
-      - ~/.ssh/known_hosts:/tmp/.ssh/known_hosts:ro
+      - ~/.ssh/id_ed25519:/root/.ssh/id_ed25519:ro
+      - ~/.ssh/known_hosts:/root/.ssh/known_hosts:ro
     environment:
-      - HOME=/tmp
       # Paste your public key here (safe to commit/share)
       - BACKUP_PUBKEY=age1m68kpqvrlgr0p5ygrulc8lutd0zvvyx9rz5kk9l0h4q5mkwtu3dspc5j54
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-        mkdir -p /tmp/.ssh
-        # Add passwd entry so SSH can resolve uid 1000
-        echo "user:x:1000:1000::/tmp:/bin/sh" >> /etc/passwd
         apk add --no-cache sqlite age >/dev/null 2>&1
         git config --global --add safe.directory /repo
         git config --global user.name "Frigate Backup Bot"
@@ -55,12 +50,16 @@ services:
             fi
           fi
 
-          # 3. Stage configs, compose files, and encrypted secrets
+          # 3. Fix ownership of any files written by this container
+          chown 1000:1000 users.sql.enc users.sql.last .env.enc .env.last 2>/dev/null || true
+          chown 1000:1000 .git/objects -R 2>/dev/null || true
+
+          # 4. Stage configs, compose files, and encrypted secrets
           for f in config/config.yaml docker-compose.yml docker-compose.backup.yml .env.enc users.sql.enc .gitignore; do
             [ -f "$$f" ] && git add "$$f"
           done
 
-          # 4. Commit and push only if changes exist
+          # 5. Commit and push only if changes exist
           CHANGES=$$(git status --porcelain -uno)
           if [ -n "$${CHANGES}" ]; then
             echo "[$${NOW}] [INFO] Changes detected in repository:"
