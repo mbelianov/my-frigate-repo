@@ -1,0 +1,30 @@
+services:
+  frigate:
+    container_name: frigate
+    privileged: true # This may not be necessary for all setups
+    restart: unless-stopped
+    stop_grace_period: 30s # Allow enough time to shut down the various services
+    image: ghcr.io/blakeblackshear/frigate:stable
+    shm_size: "512mb" # Update for your cameras based on SHM calculation
+    devices:
+      - /dev/dri  # Intel/AMD GPU hardware acceleration
+    #group_add:   # not necessary if privileged: true is already set
+    #  - '992'    # getent group render video | cut -d: -f3
+    #  - '44'     # getent group render video | cut -d: -f3
+    volumes:
+      - /etc/localtime:/etc/localtime:ro # Sync host time
+      - /home/martin/config:/config # Config file directory
+      - /home/martin/storage:/media/frigate # Recording storage directory
+      - type: tmpfs # 1GB in-memory filesystem for recording segment storage
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    ports:
+      - "8554:8554" # Access RTSP feeds from go2rtc
+      - "8971:8971" # Authenticated UI and API access (default HTTPS)
+      - "5000:5000" # Unauthenticated UI access
+      - "8555:8555" # WebRTC over TCP
+      - "8555:8555/udp" # WebRTC over UDP
+    environment:
+      TZ: "Europe/Sofia" # Timezone
+      #LIBVA_DRIVER_NAME: i965    # try this if 'docker exec -it frigate vainfo' returns errors
