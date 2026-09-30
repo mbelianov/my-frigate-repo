@@ -35,6 +35,7 @@ services:
             # Encrypt users SQL using public key
             if [ ! -f "users.sql.last" ] || ! cmp -s users.sql.tmp users.sql.last; then
               age -r "$${BACKUP_PUBKEY}" -o users.sql.enc users.sql.tmp
+              cp users.sql.tmp users.sql.last
               rm -f users.sql.tmp
             else
               rm -f users.sql.tmp
