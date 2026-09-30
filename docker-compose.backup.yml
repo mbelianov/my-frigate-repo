@@ -1,0 +1,71 @@
+services:
+  git-backup:
+    image: alpine/git:latest
+    container_name: frigate_git_backup
+    restart: unless-stopped
+    volumes:
+      # Mount project repository
+      - ./:/repo
+      # Mount host SSH keys (read-only) for git push
+      - ~/.ssh/id_ed25519:/root/.ssh/id_ed25519:ro
+      - ~/.ssh/known_hosts:/root/.ssh/known_hosts:ro
+    environment:
+      # Paste your public key here (safe to commit/share)
+      - BACKUP_PUBKEY=age1m68kpqvrlgr0p5ygrulc8lutd0zvvyx9rz5kk9l0h4q5mkwtu3dspc5j54
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        apk add --no-cache sqlite age >/dev/null 2>&1
+        git config --global --add safe.directory /repo
+        git config --global user.name "Frigate Backup Bot"
+        git config --global user.email "bot@frigate.local"
+
+        while true; do
+          NOW=$$(date +'%Y-%m-%d %H:%M:%S')
+          echo "[$${NOW}] [INFO] Starting backup check cycle..."
+          cd /repo
+
+          # 1. Non-blocking user & auth dump from live SQLite WAL DB
+          if [ -f "config/frigate.db" ]; then
+            sqlite3 config/frigate.db ".dump user" > users.sql.tmp
+            if sqlite3 config/frigate.db ".tables" | grep -qw "user_token"; then
+              sqlite3 config/frigate.db ".dump user_token" >> users.sql.tmp
+            fi
+
+            # Encrypt users SQL using public key
+            if [ ! -f "users.sql.last" ] || ! cmp -s users.sql.tmp users.sql.last; then
+              age -r "$${BACKUP_PUBKEY}" -o users.sql.enc users.sql.tmp
+              rm -f users.sql.tmp
+            else
+              rm -f users.sql.tmp
+            fi
+          fi
+
+          # 2. Encrypt .env file using public key
+          if [ -f ".env" ]; then
+            if [ ! -f ".env.last" ] || ! cmp -s .env .env.last; then
+              age -r "$${BACKUP_PUBKEY}" -o .env.enc .env
+              cp .env .env.last
+            fi
+          fi
+
+          # 3. Stage configs, compose files, and encrypted secrets
+          for f in config/config.yaml docker-compose.yml docker-compose.backup.yml .env.enc users.sql.enc .gitignore; do
+            [ -f "$$f" ] && git add "$$f"
+          done
+
+          # 4. Commit and push only if changes exist
+          CHANGES=$$(git status --porcelain -uno)
+          if [ -n "$${CHANGES}" ]; then
+            echo "[$${NOW}] [INFO] Changes detected in repository:"
+            echo "$${CHANGES}"
+            git commit -m "chore(backup): auto-sync encrypted stack $(date +'%Y-%m-%d %H:%M:%S')"
+            git pull --rebase origin main >/dev/null 2>&1 || true
+            git push origin main && echo "[$${NOW}] [SUCCESS] Backup successfully pushed to remote repository." || echo "[$${NOW}] [ERROR] Git push failed."
+          else
+            echo "[$${NOW}] [INFO] Backup cycle complete: No changes detected. Skipping commit."
+          fi
+
+          # Sleep for 24 hours (86400 seconds)
+          sleep 86400
+        done

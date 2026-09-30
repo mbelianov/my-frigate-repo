@@ -1,0 +1,17 @@
+# Plaintext secrets and private keys (Never commit)
+.env
+users.sql
+secrets/
+*.key
+*.tmp
+
+# non-Frigate materials
+.ssh/
+.bash*
+.docker/
+.local/
+.profile
+
+# Frigate runtime database, cache, clips, and recordings
+config/frigate.db*
+storage/

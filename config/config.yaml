@@ -1,0 +1,89 @@
+mqtt:
+  enabled: false
+
+detectors:
+  ov:
+    type: openvino
+    device: CPU
+model:
+  width: 300
+  height: 300
+  input_tensor: nhwc
+  input_pixel_format: bgr
+  path: /openvino-model/ssdlite_mobilenet_v2.xml
+  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+
+  input_dtype: int
+  model_type: ssd
+cameras:     # No cameras defined, UI wizard should be used
+  demo:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: []
+      inputs:
+        - path: 
+            rtsp://192.168.88.40:554/user=admin_password=BnYgoY67_channel=0_stream=0&onvif=0.sdp?real_stream
+          roles:
+            - record
+        - path: 
+            rtsp://192.168.88.40:554/user=admin_password=BnYgoY67_channel=0_stream=1&onvif=0.sdp?real_stream
+          roles:
+            - detect
+    live:
+      streams:
+        Stream 1 - hd: demo_1
+        Stream 2 - sd: demo_2
+    friendly_name: demo_cam
+    motion:
+      enabled: true
+      mask:
+        motion_mask_-_clock:
+          friendly_name: Motion Mask - clock
+          enabled: true
+          coordinates: 0.67,0,0.669,0.162,1,0.16,0.996,0.002
+    detect:
+      enabled: true
+    record:
+      enabled: true
+    onvif:
+      host: 192.168.88.40
+      port: 8899
+      user: '""'
+      password: '""'
+      autotracking:
+        enabled: false
+        required_zones:
+          - zone_1
+        calibrate_on_startup: true
+    zones:
+      zone_1:
+        coordinates: 0.05,0.1,0.049,0.902,0.95,0.991,0.94,0.042,0.194,0.09
+        enabled: true
+        inertia: 3
+        loitering_time: 0
+        friendly_name: zone 1
+version: 0.18-0
+ffmpeg:
+  hwaccel_args: preset-vaapi
+go2rtc:
+  streams:
+    demo_1:
+      - rtsp://192.168.88.40:554/user=admin_password=BnYgoY67_channel=0_stream=0&onvif=0.sdp?real_stream
+    demo_2:
+      - rtsp://192.168.88.40:554/user=admin_password=BnYgoY67_channel=0_stream=1&onvif=0.sdp?real_stream
+detect:
+  enabled: true
+record:
+  enabled: true
+  motion:
+    days: 3
+semantic_search:
+  enabled: false
+notifications:
+  email: mbelianov@gmail.com
+  enabled: true
+camera_groups: {}
+auth:
+  roles:
+    lozen_viewer:
+      - demo
