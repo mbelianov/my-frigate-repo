@@ -1,6 +1,7 @@
 # Plaintext secrets and private keys (Never commit)
 .env
 users.sql
+users.sql.*
 secrets/
 *.key
 *.tmp
@@ -11,7 +12,11 @@ secrets/
 .docker/
 .local/
 .profile
+.bob*
+.cache/*
 
 # Frigate runtime database, cache, clips, and recordings
-config/frigate.db*
+config/*.db*
+config/.*
+config/model_cache/
 storage/

@@ -2,19 +2,22 @@ services:
   git-backup:
     image: alpine/git:latest
     container_name: frigate_git_backup
+    user: "1000:1000"
     restart: unless-stopped
     volumes:
       # Mount project repository
       - ./:/repo
       # Mount host SSH keys (read-only) for git push
-      - ~/.ssh/id_ed25519:/root/.ssh/id_ed25519:ro
-      - ~/.ssh/known_hosts:/root/.ssh/known_hosts:ro
+      - ~/.ssh/id_ed25519:/tmp/.ssh/id_ed25519:ro
+      - ~/.ssh/known_hosts:/tmp/.ssh/known_hosts:ro
     environment:
+      - HOME=/tmp
       # Paste your public key here (safe to commit/share)
       - BACKUP_PUBKEY=age1m68kpqvrlgr0p5ygrulc8lutd0zvvyx9rz5kk9l0h4q5mkwtu3dspc5j54
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
+        mkdir -p /tmp/.ssh && chmod 700 /tmp/.ssh
         apk add --no-cache sqlite age >/dev/null 2>&1
         git config --global --add safe.directory /repo
         git config --global user.name "Frigate Backup Bot"
