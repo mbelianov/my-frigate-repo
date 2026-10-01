@@ -28,6 +28,8 @@ services:
       - "5000:5000" # Unauthenticated UI access
       - "8555:8555" # WebRTC over TCP
       - "8555:8555/udp" # WebRTC over UDP
+    env_file:
+      - .env
     environment:
       TZ: "Europe/Sofia" # Timezone
       #LIBVA_DRIVER_NAME: i965    # try this if 'docker exec -it frigate vainfo' returns errors

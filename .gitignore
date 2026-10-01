@@ -12,8 +12,8 @@ secrets/
 .docker/
 .local/
 .profile
-.bob*
-.cache/*
+.bobide-server/
+.cache/
 
 # Frigate runtime database, cache, clips, and recordings
 config/*.db*
