@@ -16,52 +16,72 @@ model:
   input_dtype: int
   model_type: ssd
 cameras:     # No cameras defined, UI wizard should be used
-  demo:
+  street_-_sofia:
     enabled: true
+    friendly_name: Street - Sofia
     ffmpeg:
-      hwaccel_args: []
       inputs:
         - path: 
-            rtsp://192.168.88.40:554/user=admin_password=BnYgoY67_channel=0_stream=0&onvif=0.sdp?real_stream
+            rtsp://selyandur:Selyandur1@192.168.1.251:554/Streaming/Channels/101?transportmode=unicast&profile=Profile_1
           roles:
             - record
         - path: 
-            rtsp://192.168.88.40:554/user=admin_password=BnYgoY67_channel=0_stream=1&onvif=0.sdp?real_stream
+            rtsp://selyandur:Selyandur1@192.168.1.251:554/Streaming/Channels/102?transportmode=unicast&profile=Profile_2
           roles:
             - detect
+    detect:
+      width: 352
+      height: 288
     live:
       streams:
-        Stream 1 - hd: demo_1
-        Stream 2 - sd: demo_2
-    friendly_name: demo_cam
+        Stream 1: street_-_sofia_1
+        Stream 2: street_-_sofia_2
     motion:
-      enabled: true
       mask:
-        motion_mask_-_clock:
-          friendly_name: Motion Mask - clock
+        motion_mask_1:
+          friendly_name: Motion Mask 1
           enabled: true
-          coordinates: 0.67,0,0.669,0.162,1,0.16,0.996,0.002
+          coordinates: 0,0,1,0,0.995,0.994,0.625,0.997,0.622,0.249,0,0.258
+  street_-_plovdiv:
+    enabled: false
+    friendly_name: Street - Plovdiv
+    ffmpeg:
+      inputs:
+        - path: 
+            rtsp://192.168.1.246:554/user=admin_password=tlJwpbo6_channel=1_stream=0.sdp?real_stream
+          roles:
+            - record
+        - path: 
+            rtsp://192.168.1.246:554/user=admin_password=tlJwpbo6_channel=1_stream=1.sdp?real_stream
+          roles:
+            - detect
     detect:
-      enabled: true
-    record:
-      enabled: true
-    onvif:
-      host: 192.168.88.40
-      port: 8899
-      user: '""'
-      password: '""'
-      autotracking:
-        enabled: false
-        required_zones:
-          - zone_1
-        calibrate_on_startup: true
-    zones:
-      zone_1:
-        coordinates: 0.05,0.1,0.049,0.902,0.95,0.991,0.94,0.042,0.194,0.09
-        enabled: true
-        inertia: 3
-        loitering_time: 0
-        friendly_name: zone 1
+      width: 704
+      height: 576
+    live:
+      streams:
+        Stream 1: street_-_plovdiv_1
+        Stream 2: street_-_plovdiv_2
+  house_martin:
+    enabled: false
+    friendly_name: House Martin
+    ffmpeg:
+      inputs:
+        - path: 
+            rtsp://192.168.1.249:554/user=admin_password=tlJwpbo6_channel=0_stream=0.sdp?real_stream
+          roles:
+            - record
+        - path: 
+            rtsp://192.168.1.249:554/user=admin_password=tlJwpbo6_channel=0_stream=1.sdp?real_stream
+          roles:
+            - detect
+    detect:
+      width: 640
+      height: 360
+    live:
+      streams:
+        Stream 1: house_martin_1
+        Stream 2: house_martin_2
 version: 0.18-0
 ffmpeg:
   hwaccel_args: preset-vaapi
@@ -71,6 +91,18 @@ go2rtc:
       - rtsp://192.168.88.40:554/user=admin_password=BnYgoY67_channel=0_stream=0&onvif=0.sdp?real_stream
     demo_2:
       - rtsp://192.168.88.40:554/user=admin_password=BnYgoY67_channel=0_stream=1&onvif=0.sdp?real_stream
+    street_-_sofia_1:
+      - rtsp://selyandur:Selyandur1@192.168.1.251:554/Streaming/Channels/101?transportmode=unicast&profile=Profile_1
+    street_-_sofia_2:
+      - rtsp://selyandur:Selyandur1@192.168.1.251:554/Streaming/Channels/102?transportmode=unicast&profile=Profile_2
+    street_-_plovdiv_1:
+      - rtsp://192.168.1.246:554/user=admin_password=tlJwpbo6_channel=1_stream=0.sdp?real_stream
+    street_-_plovdiv_2:
+      - rtsp://192.168.1.246:554/user=admin_password=tlJwpbo6_channel=1_stream=1.sdp?real_stream
+    house_martin_1:
+      - rtsp://192.168.1.249:554/user=admin_password=tlJwpbo6_channel=0_stream=0.sdp?real_stream
+    house_martin_2:
+      - rtsp://192.168.1.249:554/user=admin_password=tlJwpbo6_channel=0_stream=1.sdp?real_stream
 detect:
   enabled: true
 record:
@@ -84,7 +116,5 @@ notifications:
   enabled: true
 camera_groups: {}
 auth:
-  roles:
-    lozen_viewer:
-      - demo
+  roles: {}
 environment_vars: {}
