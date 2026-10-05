@@ -76,6 +76,8 @@ cameras:     # No cameras defined, UI wizard should be used
           friendly_name: Motion Mask 2
           enabled: true
           coordinates: 0.002,0.345,0.42,0.337,0.318,1,0,1
+    timestamp_style:
+      position: tr
   house_martin:
     enabled: false
     friendly_name: House Martin
