@@ -42,8 +42,12 @@ cameras:     # No cameras defined, UI wizard should be used
           friendly_name: Motion Mask 1
           enabled: true
           coordinates: 0,0,1,0,0.995,0.994,0.625,0.997,0.622,0.249,0,0.258
+        motion_mask_2:
+          friendly_name: Motion Mask 2
+          enabled: true
+          coordinates: 0,0.257,0.397,0.253,0,0.669
   street_-_plovdiv:
-    enabled: false
+    enabled: true
     friendly_name: Street - Plovdiv
     ffmpeg:
       inputs:
@@ -62,6 +66,16 @@ cameras:     # No cameras defined, UI wizard should be used
       streams:
         Stream 1: street_-_plovdiv_1
         Stream 2: street_-_plovdiv_2
+    motion:
+      mask:
+        motion_mask_1:
+          friendly_name: Motion Mask 1
+          enabled: true
+          coordinates: 0.001,0.003,1,0,1,0.33,0,0.344
+        motion_mask_2:
+          friendly_name: Motion Mask 2
+          enabled: true
+          coordinates: 0.002,0.345,0.42,0.337,0.318,1,0,1
   house_martin:
     enabled: false
     friendly_name: House Martin
@@ -87,10 +101,6 @@ ffmpeg:
   hwaccel_args: preset-vaapi
 go2rtc:
   streams:
-    demo_1:
-      - rtsp://192.168.88.40:554/user=admin_password=BnYgoY67_channel=0_stream=0&onvif=0.sdp?real_stream
-    demo_2:
-      - rtsp://192.168.88.40:554/user=admin_password=BnYgoY67_channel=0_stream=1&onvif=0.sdp?real_stream
     street_-_sofia_1:
       - rtsp://selyandur:Selyandur1@192.168.1.251:554/Streaming/Channels/101?transportmode=unicast&profile=Profile_1
     street_-_sofia_2:
@@ -118,3 +128,7 @@ camera_groups: {}
 auth:
   roles: {}
 environment_vars: {}
+telemetry:
+  network_interfaces:
+    - eth0
+  stats: {}

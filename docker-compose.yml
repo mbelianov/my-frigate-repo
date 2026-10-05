@@ -32,4 +32,4 @@ services:
       - .env
     environment:
       TZ: "Europe/Sofia" # Timezone
-      #LIBVA_DRIVER_NAME: i965    # try this if 'docker exec -it frigate vainfo' returns errors
+      LIBVA_DRIVER_NAME: i965    # try this if 'docker exec -it frigate vainfo' returns errors
