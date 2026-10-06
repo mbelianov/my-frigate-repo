@@ -79,7 +79,7 @@ cameras:     # No cameras defined, UI wizard should be used
     timestamp_style:
       position: tr
   house_martin:
-    enabled: false
+    enabled: true
     friendly_name: House Martin
     ffmpeg:
       inputs:
@@ -98,6 +98,65 @@ cameras:     # No cameras defined, UI wizard should be used
       streams:
         Stream 1: house_martin_1
         Stream 2: house_martin_2
+    motion:
+      mask:
+        motion_mask_1:
+          friendly_name: Motion Mask 1
+          enabled: true
+          coordinates: 0.002,0,0.996,0,1,0.302,0,0.316
+        motion_mask_2:
+          friendly_name: Motion Mask 2
+          enabled: true
+          coordinates: 0.281,0.322,0.281,0.425,1,0.549,1,0.31
+  barbeque:
+    enabled: true
+    ffmpeg:
+      inputs:
+        - path: 
+            rtsp://192.168.1.244:554/user=admin_password=tlJwpbo6_channel=0_stream=0.sdp?real_stream
+          roles:
+            - record
+        - path: 
+            rtsp://192.168.1.244:554/user=admin_password=tlJwpbo6_channel=0_stream=1.sdp?real_stream
+          roles:
+            - detect
+    detect:
+      width: 640
+      height: 360
+    live:
+      streams:
+        Stream 1: barbeque_1
+        Stream 2: barbeque_2
+    motion:
+      mask:
+        motion_mask_1:
+          friendly_name: Motion Mask 1
+          enabled: true
+          coordinates: 0.998,0,1,0.209,0,0.228,0,0
+  garage_entrance:
+    enabled: true
+    friendly_name: Garage entrance
+    ffmpeg:
+      inputs:
+        - path: rtsp://192.168.1.240/live/0/MAIN
+          roles:
+            - record
+        - path: rtsp://192.168.1.240/live/0/SUB
+          roles:
+            - detect
+    detect:
+      width: 640
+      height: 360
+    live:
+      streams:
+        Stream 1: garage_entrance_1
+        Stream 2: garage_entrance_2
+    motion:
+      mask:
+        motion_mask_1:
+          friendly_name: Motion Mask 1
+          enabled: true
+          coordinates: 0.004,0.002,0.561,0,0.564,0.214,0,0.368
 version: 0.18-0
 ffmpeg:
   hwaccel_args: preset-vaapi
@@ -115,6 +174,14 @@ go2rtc:
       - rtsp://192.168.1.249:554/user=admin_password=tlJwpbo6_channel=0_stream=0.sdp?real_stream
     house_martin_2:
       - rtsp://192.168.1.249:554/user=admin_password=tlJwpbo6_channel=0_stream=1.sdp?real_stream
+    barbeque_1:
+      - rtsp://192.168.1.244:554/user=admin_password=tlJwpbo6_channel=0_stream=0.sdp?real_stream
+    barbeque_2:
+      - rtsp://192.168.1.244:554/user=admin_password=tlJwpbo6_channel=0_stream=1.sdp?real_stream
+    garage_entrance_1:
+      - rtsp://192.168.1.240/live/0/MAIN
+    garage_entrance_2:
+      - rtsp://192.168.1.240/live/0/SUB
 detect:
   enabled: true
 record:

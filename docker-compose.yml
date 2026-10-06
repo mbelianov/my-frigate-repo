@@ -1,5 +1,6 @@
 include:
   - docker-compose.backup.yml
+  - docker-compose.netdata.yml
 
 services:
   frigate:
