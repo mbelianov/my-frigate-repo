@@ -157,6 +157,36 @@ cameras:     # No cameras defined, UI wizard should be used
           friendly_name: Motion Mask 1
           enabled: true
           coordinates: 0.004,0.002,0.561,0,0.564,0.214,0,0.368
+  front_door:
+    enabled: true
+    friendly_name: front door
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/front_door_1
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/front_door_2
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      width: 352
+      height: 288
+    live:
+      streams:
+        Stream 1: front_door_1
+        Stream 2: front_door_2
+    motion:
+      mask:
+        motion_mask_1:
+          friendly_name: Motion Mask 1
+          enabled: true
+          coordinates: 0.003,0.006,0.998,0.007,0.997,0.198,0,0.204
+        motion_mask_2:
+          friendly_name: Motion Mask 2
+          enabled: true
+          coordinates: 0.381,0.204,0,0.205,0,1,0.318,1
 version: 0.18-0
 ffmpeg:
   hwaccel_args: preset-vaapi
@@ -182,6 +212,10 @@ go2rtc:
       - rtsp://192.168.1.240/live/0/MAIN
     garage_entrance_2:
       - rtsp://192.168.1.240/live/0/SUB
+    front_door_1:
+      - rtsp://192.168.1.6:554/user=admin_password=tlJwpbo6_channel=1_stream=0.sdp?real_stream
+    front_door_2:
+      - rtsp://192.168.1.6:554/user=admin_password=tlJwpbo6_channel=1_stream=1.sdp?real_stream
 detect:
   enabled: true
 record:
