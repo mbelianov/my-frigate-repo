@@ -133,6 +133,10 @@ cameras:     # No cameras defined, UI wizard should be used
           friendly_name: Motion Mask 1
           enabled: true
           coordinates: 0.998,0,1,0.209,0,0.228,0,0
+    onvif:
+      host: 192.168.1.244
+      port: 8899
+      user: admin
   garage_entrance:
     enabled: true
     friendly_name: Garage entrance
