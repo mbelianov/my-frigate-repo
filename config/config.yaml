@@ -46,6 +46,15 @@ cameras:     # No cameras defined, UI wizard should be used
           friendly_name: Motion Mask 2
           enabled: true
           coordinates: 0,0.257,0.397,0.253,0,0.669
+    record:
+      detections:
+        retain:
+          days: 5
+      alerts:
+        retain:
+          days: 5
+      motion:
+        days: 1
   street_-_plovdiv:
     enabled: true
     friendly_name: Street - Plovdiv
