@@ -52,7 +52,7 @@ cameras:     # No cameras defined, UI wizard should be used
           days: 5
       alerts:
         retain:
-          days: 5
+          days: 3
       motion:
         days: 1
   street_-_plovdiv:
