@@ -171,7 +171,7 @@ cameras:     # No cameras defined, UI wizard should be used
           enabled: true
           coordinates: 0.004,0.002,0.561,0,0.564,0.214,0,0.368
   front_door:
-    enabled: true
+    enabled: false
     friendly_name: front door
     ffmpeg:
       inputs:
@@ -200,9 +200,26 @@ cameras:     # No cameras defined, UI wizard should be used
           friendly_name: Motion Mask 2
           enabled: true
           coordinates: 0.381,0.204,0,0.205,0,1,0.318,1
+  front_door_2:
+    enabled: true
+    friendly_name: front door 2
+    ffmpeg:
+      inputs:
+        - path: 
+            rtsp://192.168.1.153:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_stream
+          roles:
+            - record
+        - path: 
+            rtsp://192.168.1.153:554/user=admin_password=tlJwpbo6_channel=1_stream=1&onvif=0.sdp?real_stream
+          roles:
+            - detect
+      input_args: -rtsp_transport tcp -use_wallclock_as_timestamps 1
+    live:
+      streams:
+        Stream 1: front_door_2_1
+        Stream 2: front_door_2_2
 version: 0.18-0
-ffmpeg:
-  hwaccel_args: preset-vaapi
+ffmpeg: {}
 go2rtc:
   streams:
     street_-_sofia_1:
@@ -228,7 +245,11 @@ go2rtc:
     front_door_1:
       - rtsp://192.168.1.6:554/user=admin_password=tlJwpbo6_channel=1_stream=0.sdp?real_stream
     front_door_2:
-      - rtsp://192.168.1.6:554/user=admin_password=tlJwpbo6_channel=1_stream=1.sdp?real_stream
+      - rtsp://192.168.1.153:554/user=admin_password=tlJwpbo6_channel=1_stream=1&onvif=0.sdp?real_stream
+    front_door_2_1:
+      - rtsp://192.168.1.153:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_stream
+    front_door_2_2:
+      - rtsp://192.168.1.153:554/user=admin_password=tlJwpbo6_channel=1_stream=1&onvif=0.sdp?real_stream
 detect:
   enabled: true
 record:
