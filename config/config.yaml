@@ -237,9 +237,6 @@ record:
     days: 3
 semantic_search:
   enabled: false
-notifications:
-  email: mbelianov@gmail.com
-  enabled: true
 camera_groups: {}
 auth:
   roles: {}
@@ -248,3 +245,6 @@ telemetry:
   network_interfaces:
     - eth0
   stats: {}
+notifications:
+  email: mbelianov@gmail.com
+  enabled: true
